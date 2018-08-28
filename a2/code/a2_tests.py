@@ -105,13 +105,13 @@ def TestFactory(module):
             b_space = b.getMostConstrainedUnsolvedSpace()
             self.assertIn(b_space, [(3, 0), (5, 6), (8, 0), (5, 8), (3, 2), (8, 2), (3, 1), (5, 7), (4, 3), (8, 4)])
 
-            c = self.Board("tests/named-boards/lemur.csv")
+            c = self.Board("tests/named-boards/dolphin.csv")
             c_space = c.getMostConstrainedUnsolvedSpace()
-            self.assertIn(c_space, [(0, 1), (5, 4), (5, 8), (2, 1), (4, 8)])
+            self.assertIn(c_space, [(1, 4), (2, 2), (1, 2)])
 
-            d = self.Board("tests/named-boards/panther.csv")
+            d = self.Board("tests/named-boards/lemur.csv")
             d_space = d.getMostConstrainedUnsolvedSpace()
-            self.assertIn(d_space, [(7, 6)])
+            self.assertIn(d_space, [(1, 6)])
 
 
         # #################################
