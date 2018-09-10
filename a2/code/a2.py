@@ -60,22 +60,46 @@ class Board():
 
     ##########################################
     ####   Move Functions - YOUR IMPLEMENTATIONS GO HERE
+
     ##########################################
 
     #gets the unsolved space with the most current constraints
     def getMostConstrainedUnsolvedSpace(self):
+        val = 0
+        x = None
+        for space in self.unSolved:
+            temp = self.valsInBoxes[self.rcToBox(space[0], space[1])] | self.valsInRows[space[0]] | self.valsInCols[space[1]]
+            if val < len(temp):
+                val = len(temp)
+                x = space
+        return x
         pass
 
     #returns True if the move is not blocked by any constraints
-    def isValidMove(self,space,val):
+    def isValidMove(self, space, val):
+        if val not in self.valsInBoxes[self.rcToBox(space[0], space[1])]:
+            if val not in self.valsInRows[space[0]]:
+                if val not in self.valsInCols[space[1]]:
+                    return True
+        return False
         pass
 
     #makes a move, records that its in the row, col, and box, and removes the space from unSolved
     def makeMove(self, space, val):
+        self.board[space] = val
+        self.valsInRows[space[0]].add(val)
+        self.valsInCols[space[1]].add(val)
+        self.valsInBoxes[self.rcToBox(space[0], space[1])].add(val)
+        self.unSolved.remove(space)
         pass
 
     #removes the move, its record in its row, col, and box, and adds the space back to unSolved
     def removeMove(self, space, val):
+        self.board.pop(space)
+        self.valsInRows[space[0]].remove(val)
+        self.valsInCols[space[1]].remove(val)
+        self.valsInBoxes[self.rcToBox(space[0], space[1])].remove(val)
+        self.unSolved.add(space)
         pass
 
 
@@ -141,6 +165,18 @@ class Solver:
     #upon completion, it will leave the board in the solved state (or original
     #state if a solution does not exist)
     def solve(self):
+        if len(self.board.unSolved) == 0:
+            return True
+        space = self.board.getMostConstrainedUnsolvedSpace()
+        for val in range(1, self.board.n2 + 1):
+            if self.board.isValidMove(space, val):
+                self.board.makeMove(space, val)
+                work = self.solve()
+                if work == True:
+                    return True
+                if work == False:
+                    self.board.removeMove(space, val)
+        return False
         pass
 
 
